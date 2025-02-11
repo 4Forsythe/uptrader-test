@@ -10,6 +10,7 @@
     "@types/react-modal": "^3.16.3",
     "classnames": "^2.5.1",
     "cra-template-typescript": "1.2.0",
+    "date-fns": "^4.1.0",
     "lucide-react": "^0.475.0",
     "react": "^19.0.0",
     "react-beautiful-dnd": "^13.1.1",

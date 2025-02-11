@@ -17,8 +17,7 @@ export interface Task {
   status: TaskStatuses;
   priority: TaskPriorities;
   createdAt: string;
-  timeInWork?: number;
-  completedAt?: string;
+  deadline: string;
   files?: string[];
   subtasks: Task[] | [];
   comments: Comment[] | [];

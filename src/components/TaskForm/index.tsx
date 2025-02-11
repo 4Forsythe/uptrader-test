@@ -56,6 +56,7 @@ export const TaskForm: React.FC<TaskFormProps> = ({ projectId, task }) => {
             priority,
             status,
             createdAt: new Date().toISOString(),
+            deadline: deadline.toISOString(),
             subtasks: [],
             comments: [],
           })
@@ -69,6 +70,7 @@ export const TaskForm: React.FC<TaskFormProps> = ({ projectId, task }) => {
             priority,
             status,
             createdAt: new Date().toISOString(),
+            deadline: deadline.toISOString(),
             subtasks: [],
             comments: [],
           })

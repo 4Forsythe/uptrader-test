@@ -1,0 +1,48 @@
+.container {
+  padding: 0 48px;
+
+  .header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+
+    .title {
+      font-size: 24px;
+      font-weight: 700;
+    }
+  }
+
+  .list {
+    margin: 48px 0;
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+
+    .listItem {
+      width: fit-content;
+      gap: 8px;
+      padding: 8px 12px;
+      border-radius: 8px;
+      background: rgba(#d3d3d3, 0.35);
+      display: flex;
+      align-items: center;
+      font-size: 13px;
+      font-weight: 600;
+      text-transform: uppercase;
+      transition: all 250ms ease-out;
+
+      .card {
+        font-size: 19px;
+        font-weight: 500;
+      }
+
+      .remove {
+        font-size: 16px;
+        font-weight: 700;
+      }
+
+      &:hover {
+        background: rgba(#d3d3d3, 0.6);
+      }
+    }
+  }
+}

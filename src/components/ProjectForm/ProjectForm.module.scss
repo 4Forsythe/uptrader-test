@@ -1,5 +1,5 @@
 .container {
-  width: 720px;
+  width: 520px;
   padding: 12px;
 
   .title {
@@ -26,20 +26,9 @@
         font-weight: 600;
       }
 
-      input,
-      textarea,
-      select {
+      input {
         padding: 5px 10px;
         border: 1px solid #000000;
-      }
-
-      textarea {
-        resize: none;
-        min-height: 100px;
-      }
-
-      .datepicker {
-        width: fit-content;
       }
     }
   }

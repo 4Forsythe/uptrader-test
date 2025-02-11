@@ -1,34 +1,40 @@
 import React from 'react';
-import Modal from 'react-modal';
+import cn from 'classnames';
 import { useDispatch } from 'react-redux';
+import DatePicker from 'react-datepicker';
 
+import { useModal } from '../../hooks';
+import {
+  addTask,
+  deleteTask,
+  updateTask,
+} from '../../redux/actions/task.actions';
 import {
   Task,
   TaskPriorities,
   TaskStatuses,
 } from '../../redux/types/task.types';
 
-import { addTask } from '../../redux/actions/task.actions';
+import 'react-datepicker/dist/react-datepicker.css';
 
-interface TaskModalProps {
+import classes from './TaskForm.module.scss';
+
+interface TaskFormProps {
   projectId: string;
-  task: Task | null;
-  isOpen: boolean;
-  onClose: () => void;
+  task?: Task;
 }
 
-export const TaskModal: React.FC<TaskModalProps> = ({
-  projectId,
-  task,
-  isOpen,
-  onClose,
-}) => {
+export const TaskForm: React.FC<TaskFormProps> = ({ projectId, task }) => {
   const [title, setTitle] = React.useState('');
   const [description, setDescription] = React.useState('');
+  const [deadline, setDeadline] = React.useState<Date | null>(new Date());
   const [priority, setPriority] = React.useState(TaskPriorities.LOW);
   const [status, setStatus] = React.useState(TaskStatuses.QUEUE);
 
   const dispatch = useDispatch();
+  const { closeModal } = useModal();
+
+  const isValid = title && description && deadline && priority && status;
 
   React.useEffect(() => {
     if (task) {
@@ -39,30 +45,56 @@ export const TaskModal: React.FC<TaskModalProps> = ({
     }
   }, [task]);
 
-  const onSubmit = (event: React.FormEvent) => {
-    event.preventDefault();
+  const onSaveTask = () => {
+    if (isValid) {
+      if (task) {
+        dispatch(
+          updateTask(projectId, task.id, {
+            id: Date.now().toString(),
+            title,
+            description,
+            priority,
+            status,
+            createdAt: new Date().toISOString(),
+            subtasks: [],
+            comments: [],
+          })
+        );
+      } else {
+        dispatch(
+          addTask(projectId, {
+            id: Date.now().toString(),
+            title,
+            description,
+            priority,
+            status,
+            createdAt: new Date().toISOString(),
+            subtasks: [],
+            comments: [],
+          })
+        );
+      }
 
-    dispatch(
-      addTask(projectId, {
-        id: Date.now().toString(),
-        title,
-        description,
-        priority,
-        status,
-        createdAt: new Date().toISOString(),
-        subtasks: [],
-        comments: [],
-      })
-    );
+      closeModal();
+    }
+  };
 
-    onClose();
+  const onDeleteTask = () => {
+    if (task) {
+      dispatch(deleteTask(projectId, task.id));
+
+      closeModal();
+    }
   };
 
   return (
-    <Modal isOpen={isOpen} onRequestClose={onClose}>
-      <h2>{task ? 'Редактировать задачу' : 'Создать новую задачу'}</h2>
-      <form onSubmit={onSubmit}>
-        <div>
+    <div className={classes.container}>
+      <h5 className={classes.title}>
+        {task ? 'Редактировать задачу' : 'Создать новую задачу'}
+      </h5>
+
+      <div className={classes.form}>
+        <div className={classes.column}>
           <label htmlFor='title'>Название</label>
           <input
             type='text'
@@ -72,7 +104,8 @@ export const TaskModal: React.FC<TaskModalProps> = ({
             required
           />
         </div>
-        <div>
+
+        <div className={classes.column}>
           <label htmlFor='description'>Описание</label>
           <textarea
             id='description'
@@ -81,7 +114,36 @@ export const TaskModal: React.FC<TaskModalProps> = ({
             required
           />
         </div>
-        <div>
+
+        <div className={classes.column}>
+          <label htmlFor='status'>Состояние</label>
+          <select
+            id='status'
+            value={status}
+            onChange={(event) => setStatus(event.target.value as TaskStatuses)}
+          >
+            {Object.values(TaskStatuses).map((status) => (
+              <option value={status} key={status}>
+                {status}
+              </option>
+            ))}
+          </select>
+        </div>
+
+        {status !== TaskStatuses.DONE && (
+          <div className={classes.column}>
+            <label htmlFor='deadline'>Дедлайн</label>
+            <DatePicker
+              id='deadline'
+              wrapperClassName={classes.datepicker}
+              selected={deadline}
+              onChange={(date) => setDeadline(date)}
+              dateFormat='dd/MM/yyyy'
+            />
+          </div>
+        )}
+
+        <div className={classes.column}>
           <label htmlFor='priority'>Приоритет</label>
           <select
             id='priority'
@@ -90,27 +152,33 @@ export const TaskModal: React.FC<TaskModalProps> = ({
               setPriority(event.target.value as TaskPriorities)
             }
           >
-            <option value={TaskPriorities.LOW}>Низкий</option>
-            <option value={TaskPriorities.MEDIUM}>Средний</option>
-            <option value={TaskPriorities.HIGH}>Высокий</option>
+            {Object.values(TaskPriorities).map((priority) => (
+              <option value={priority} key={priority}>
+                {priority}
+              </option>
+            ))}
           </select>
         </div>
-        <div>
-          <label htmlFor='status'>Статус</label>
-          <select
-            id='status'
-            value={status}
-            onChange={(event) => setStatus(event.target.value as TaskStatuses)}
+      </div>
+
+      <div className={classes.buttons}>
+        <button
+          className={cn(classes.formButton, classes.submit)}
+          onClick={onSaveTask}
+          disabled={!isValid}
+        >
+          Сохранить
+        </button>
+
+        {task && (
+          <button
+            className={cn(classes.formButton, classes.decline)}
+            onClick={onDeleteTask}
           >
-            <option value={TaskStatuses.QUEUE}>Очередь</option>
-            <option value={TaskStatuses.DEVELOPMENT}>Разработка</option>
-            <option value={TaskStatuses.DONE}>Готово</option>
-          </select>
-        </div>
-        <div>
-          <button type='submit'>Сохранить</button>
-        </div>
-      </form>
-    </Modal>
+            Удалить
+          </button>
+        )}
+      </div>
+    </div>
   );
 };

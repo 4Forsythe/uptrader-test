@@ -1,11 +1,13 @@
 import React from 'react';
+import cn from 'classnames';
 import { Droppable } from 'react-beautiful-dnd';
 
 import { Task, TaskStatuses } from '../../redux/types/task.types';
 
+import { useModal } from '../../hooks';
+import { TaskColumn, TaskForm } from '../../components';
+
 import classes from './TaskList.module.scss';
-import { TaskColumn } from '../TaskColumn';
-import { TaskModal } from '../TaskForm';
 
 interface TaskListProps {
   projectId: string;
@@ -13,24 +15,22 @@ interface TaskListProps {
 }
 
 export const TaskList: React.FC<TaskListProps> = ({ projectId, tasks }) => {
-  const [isModal, setIsModal] = React.useState(false);
-  const [targetTask, setTargetTask] = React.useState<Task | null>(null);
+  const { openModal } = useModal();
 
-  const createTask = (task: Task | null = null) => {
-    setTargetTask(task);
-    setIsModal(true);
-  };
-
-  const onCloseModal = () => {
-    setIsModal(false);
-    setTargetTask(null);
+  const onSelectTask = (task: Task) => {
+    openModal(<TaskForm projectId={projectId} task={task} />);
   };
 
   return (
     <div className={classes.layout}>
       <header className={classes.header}>
         <h1 className={classes.title}>Задачи - {tasks.length}</h1>
-        <button onClick={() => createTask()}>Создать новую задачу</button>
+        <button
+          className={classes.button}
+          onClick={() => openModal(<TaskForm projectId={projectId} />)}
+        >
+          Создать новую задачу
+        </button>
       </header>
 
       <div className={classes.list}>
@@ -38,13 +38,18 @@ export const TaskList: React.FC<TaskListProps> = ({ projectId, tasks }) => {
           <Droppable droppableId={status} key={status}>
             {(provided) => (
               <div
-                className={classes.column}
+                className={cn(classes.column, {
+                  [classes.queue]: status === TaskStatuses.QUEUE,
+                  [classes.development]: status === TaskStatuses.DEVELOPMENT,
+                  [classes.done]: status === TaskStatuses.DONE,
+                })}
                 ref={provided.innerRef}
                 {...provided.droppableProps}
               >
                 <h2 className={classes.columnTitle}>{status.toUpperCase()}</h2>
                 <TaskColumn
                   tasks={tasks.filter((task) => task.status === status)}
+                  onSelectTask={onSelectTask}
                 />
                 {provided.placeholder}
               </div>
@@ -52,13 +57,6 @@ export const TaskList: React.FC<TaskListProps> = ({ projectId, tasks }) => {
           </Droppable>
         ))}
       </div>
-
-      <TaskModal
-        isOpen={isModal}
-        projectId={projectId}
-        task={targetTask}
-        onClose={onCloseModal}
-      />
     </div>
   );
 };

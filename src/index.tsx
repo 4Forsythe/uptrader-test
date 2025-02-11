@@ -1,12 +1,12 @@
 import ReactDOM from 'react-dom/client';
-
-import './styles/index.scss';
-
-import { App } from './components';
 import { Provider } from 'react-redux';
 import { BrowserRouter } from 'react-router-dom';
 
+import { App } from './components';
 import { store } from './redux/store';
+import { ModalContextProvider } from './contexts';
+
+import './styles/index.scss';
 
 const root = ReactDOM.createRoot(
   document.getElementById('root') as HTMLElement
@@ -14,7 +14,9 @@ const root = ReactDOM.createRoot(
 root.render(
   <BrowserRouter>
     <Provider store={store}>
-      <App />
+      <ModalContextProvider>
+        <App />
+      </ModalContextProvider>
     </Provider>
   </BrowserRouter>
 );

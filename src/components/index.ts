@@ -1,7 +1,10 @@
 export { App } from './App';
 export { Header } from './Header';
 export { Container } from './Container';
+export { Modal } from './Modal';
 export { ProjectList } from './ProjectList';
+export { ProjectForm } from './ProjectForm';
 export { TaskList } from './TaskList';
 export { TaskColumn } from './TaskColumn';
 export { TaskItem } from './TaskItem';
+export { TaskForm } from './TaskForm';

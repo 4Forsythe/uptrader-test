@@ -1,0 +1,47 @@
+.container {
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: absolute;
+
+  .inner {
+    z-index: 110;
+    padding: 24px;
+    min-width: 320px;
+    background-color: #ffffff;
+    position: relative;
+
+    .close {
+      top: 10px;
+      right: 10px;
+      font-size: 19px;
+      font-weight: 700;
+      color: rgba(#000000, 0.3);
+      position: absolute;
+      transition: all 250ms ease-out;
+
+      &:hover {
+        color: #000000;
+      }
+    }
+  }
+}
+
+.overlay {
+  inset: 0;
+  z-index: 100;
+  background: rgba(#000000, $alpha: 0.7);
+  position: absolute;
+}
+
+@media (max-width: 480px) {
+  .container {
+    .inner {
+      padding: 12px;
+      min-width: 180px;
+      max-width: 100%;
+      overflow: hidden;
+    }
+  }
+}

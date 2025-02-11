@@ -8,9 +8,13 @@ import classes from './TaskColumn.module.scss';
 
 interface TaskColumnProps {
   tasks: Task[];
+  onSelectTask: (task: Task) => void;
 }
 
-export const TaskColumn: React.FC<TaskColumnProps> = ({ tasks }) => {
+export const TaskColumn: React.FC<TaskColumnProps> = ({
+  tasks,
+  onSelectTask,
+}) => {
   return (
     <div className={classes.wrapper}>
       {tasks.map((task, index) => (
@@ -22,7 +26,7 @@ export const TaskColumn: React.FC<TaskColumnProps> = ({ tasks }) => {
               {...provided.draggableProps}
               {...provided.dragHandleProps}
             >
-              <TaskItem task={task} />
+              <TaskItem task={task} onSelect={onSelectTask} />
             </div>
           )}
         </Draggable>

@@ -29,3 +29,15 @@
     }
   }
 }
+
+@media (max-width: 768px) {
+  .wrapper {
+    padding: 24px 32px;
+  }
+}
+
+@media (max-width: 480px) {
+  .wrapper {
+    padding: 20px 12px;
+  }
+}

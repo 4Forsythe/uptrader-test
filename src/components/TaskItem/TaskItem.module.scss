@@ -1,0 +1,35 @@
+.card {
+  gap: 2px;
+  padding: 8px 12px;
+  display: flex;
+  flex-direction: column;
+  border-radius: 8px;
+  color: rgba(#000000, 0.75);
+  background: rgba(#ffffff, 0.35);
+  transition: all 250ms ease-out;
+
+  &:hover {
+    background: rgba(#ffffff, 0.75);
+  }
+
+  .index {
+    font-size: 14px;
+    font-weight: 500;
+  }
+
+  .title {
+    margin-bottom: 4px;
+    font-size: 15px;
+    font-weight: 700;
+  }
+
+  .description {
+    font-size: 14px;
+    font-weight: 500;
+  }
+
+  .tag {
+    font-size: 13px;
+    font-weight: 400;
+  }
+}

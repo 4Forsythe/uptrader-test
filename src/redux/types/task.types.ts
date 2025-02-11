@@ -46,7 +46,7 @@ interface MoveTaskAction {
   payload: { projectId: string; taskId: string; newStatus: TaskStatuses };
 }
 
-interface EditTaskAction {
+interface UpdateTaskAction {
   type: typeof UPDATE_TASK;
   payload: { projectId: string; taskId: string; updatedTask: Partial<Task> };
 }
@@ -64,6 +64,6 @@ interface AddSubtaskAction {
 export type TaskActions =
   | AddTaskAction
   | MoveTaskAction
-  | EditTaskAction
+  | UpdateTaskAction
   | DeleteTaskAction
   | AddSubtaskAction;

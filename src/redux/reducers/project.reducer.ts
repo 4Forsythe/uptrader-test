@@ -2,6 +2,7 @@ import {
   ProjectsState,
   ProjectActionTypes,
   ADD_PROJECT,
+  UPDATE_PROJECT,
   DELETE_PROJECT,
 } from '../types/project.types';
 
@@ -19,6 +20,16 @@ export const projectsReducer = (
     case ADD_PROJECT:
       newState = { projects: [...state.projects, action.payload] };
       break;
+
+    case UPDATE_PROJECT: {
+      const { projectId, updatedProject } = action.payload;
+      newState = {
+        projects: state.projects.map((project) =>
+          project.id === projectId ? { ...project, ...updatedProject } : project
+        ),
+      };
+      break;
+    }
 
     case DELETE_PROJECT:
       newState = {

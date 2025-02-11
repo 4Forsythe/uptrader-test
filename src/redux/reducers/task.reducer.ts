@@ -9,28 +9,31 @@ import {
 } from '../types/task.types';
 
 const initialState: TaskState = {
-  tasks: {},
+  tasks: JSON.parse(localStorage.getItem('tasks') || '{}'),
 };
 
 export const taskReducer = (
   state = initialState,
   action: TaskActions
 ): TaskState => {
+  let newState: TaskState;
+
   switch (action.type) {
     case ADD_TASK: {
       const { projectId, task } = action.payload;
-      return {
+      newState = {
         ...state,
         tasks: {
           ...state.tasks,
           [projectId]: [...(state.tasks[projectId] || []), task],
         },
       };
+      break;
     }
 
     case MOVE_TASK: {
       const { projectId, taskId, newStatus } = action.payload;
-      return {
+      newState = {
         ...state,
         tasks: {
           ...state.tasks,
@@ -39,11 +42,12 @@ export const taskReducer = (
           ),
         },
       };
+      break;
     }
 
     case UPDATE_TASK: {
       const { projectId, taskId, updatedTask } = action.payload;
-      return {
+      newState = {
         ...state,
         tasks: {
           ...state.tasks,
@@ -52,11 +56,12 @@ export const taskReducer = (
           ),
         },
       };
+      break;
     }
 
     case DELETE_TASK: {
       const { projectId, taskId } = action.payload;
-      return {
+      newState = {
         ...state,
         tasks: {
           ...state.tasks,
@@ -65,11 +70,12 @@ export const taskReducer = (
           ),
         },
       };
+      break;
     }
 
     case ADD_SUBTASK: {
       const { projectId, parentTaskId, subtask } = action.payload;
-      return {
+      newState = {
         ...state,
         tasks: {
           ...state.tasks,
@@ -80,9 +86,14 @@ export const taskReducer = (
           ),
         },
       };
+      break;
     }
 
     default:
       return state;
   }
+
+  localStorage.setItem('tasks', JSON.stringify(newState.tasks));
+
+  return newState;
 };
